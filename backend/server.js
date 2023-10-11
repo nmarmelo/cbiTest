@@ -3,7 +3,7 @@ const cors = require("cors");
 const { Sequelize, Model } = require("sequelize");
 
 const app = express();
-
+//test
 const db = require('./models');
 db.sequelize.sync();
 
