@@ -6,16 +6,16 @@ class ChromebookDataService {
   }
 
   get(serialNumber) {
-    return http.get(`/chromebooks/serialNumber=${serialNumber}`);
+    return http.get(`/chromebooks/${serialNumber}`);
   }
 
   findBySerialNumber(serialNumber) {
     return http.get(`/chromebooks?serialNumber=${serialNumber}`);
   }
 
-//   get(id) {
-//     return http.get(`/tutorials/${id}`);
-//   }
+  update(serialNumber, data) {
+    return http.put(`/chromebooks/${serialNumber}`, data);
+  }
 
 //   create(data) {
 //     return http.post("/tutorials", data);
@@ -25,17 +25,6 @@ class ChromebookDataService {
 //     return http.put(`/tutorials/${id}`, data);
 //   }
 
-//   delete(id) {
-//     return http.delete(`/tutorials/${id}`);
-//   }
-
-//   deleteAll() {
-//     return http.delete(`/tutorials`);
-//   }
-
-//   findByTitle(title) {
-//     return http.get(`/tutorials?title=${title}`);
-//   }
 }
 
 const cds = new ChromebookDataService();

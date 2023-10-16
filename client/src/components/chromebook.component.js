@@ -5,7 +5,7 @@ import { withRouter } from '../common/with-router';
 class Chromebook extends Component {
   constructor(props) {
     super(props);
-    //this.onChangeTitle = this.onChangeTitle.bind(this);
+    this.onChangeUser = this.onChangeTitle.bind(this);
     //this.onChangeDescription = this.onChangeDescription.bind(this);
     this.getChromebook = this.getChromebook.bind(this);
     //this.updatePublished = this.updatePublished.bind(this);
@@ -23,35 +23,26 @@ class Chromebook extends Component {
   }
 
   componentDidMount() {
-    this.getChromebook(this.props.router.params.id);
+    this.getChromebook(this.props.router.params.serialNumber);
   }
 
-//   onChangeTitle(e) {
-//     const title = e.target.value;
+  onChangeUser(e) {
+    const user = e.target.value;
 
-//     this.setState(function(prevState) {
-//       return {
-//         currentTutorial: {
-//           ...prevState.currentTutorial,
-//           title: title
-//         }
-//       };
-//     });
-//   }
+    this.setState(function(prevState) {
+      return {
+        currentChromebook: {
+          ...prevState.currentChromebook,
+          lastKnownUser: user
+        }
+      };
+    });
+  }
 
-//   onChangeDescription(e) {
-//     const description = e.target.value;
-    
-//     this.setState(prevState => ({
-//       currentTutorial: {
-//         ...prevState.currentTutorial,
-//         description: description
-//       }
-//     }));
-//   }
+  //TODO: onChangeLocation(e)
 
   getChromebook(serialNumber) {
-    ChromebookDataService.findBySerialNumber(serialNumber)
+    ChromebookDataService.get(serialNumber)
       .then(response => {
         this.setState({
           currentChromebook: response.data
@@ -62,29 +53,6 @@ class Chromebook extends Component {
         console.log(e);
       });
   }
-
-//   updatePublished(status) {
-//     var data = {
-//       id: this.state.currentTutorial.id,
-//       title: this.state.currentTutorial.title,
-//       description: this.state.currentTutorial.description,
-//       published: status
-//     };
-
-//     ChromebookDataService.update(this.state.currentTutorial.id, data)
-//       .then(response => {
-//         this.setState(prevState => ({
-//           currentTutorial: {
-//             ...prevState.currentTutorial,
-//             published: status
-//           }
-//         }));
-//         console.log(response.data);
-//       })
-//       .catch(e => {
-//         console.log(e);
-//       });
-//   }
 
   updateChromebook() {
     ChromebookDataService.update(
@@ -102,17 +70,6 @@ class Chromebook extends Component {
       });
   }
 
-//   deleteTutorial() {    
-//     ChromebookDataService.delete(this.state.currentTutorial.id)
-//       .then(response => {
-//         console.log(response.data);
-//         this.props.router.navigate('/tutorials');
-//       })
-//       .catch(e => {
-//         console.log(e);
-//       });
-//   }
-
   render() {
     const { currentChromebook } = this.state;
 
@@ -121,57 +78,31 @@ class Chromebook extends Component {
         {currentChromebook ? (
           <div className="edit-form">
             <h4>Chromebook</h4>
-            <label htmlFor="serialNum">Serial Number:{currentChromebook.serialNumber}</label>
+            <label htmlFor="serialNumber">Serial Number: {currentChromebook.serialNumber}</label>
             <form>
               <div className="form-group">
-                <label htmlFor="location">Location</label>
+                <label htmlFor="location">Location: {currentChromebook.location.name}</label>
+              </div>
+              <div className="form-group">
+                <label htmlFor="lastKnownUser">Last Known User</label>
                 <input
                   type="text"
                   className="form-control"
-                  id="location"
-                  value={currentChromebook.location.name}
-                  onChange={this.onChangeLocation}
+                  id="description"
+                  value={currentChromebook.lastKnownUser}
+                  onChange={this.onChangeUser}
                 />
               </div>
-
-              {/* <div className="form-group">
-                <label>
-                  <strong>Status:</strong>
-                </label>
-                {currentChromebook.published ? "Published" : "Pending"}
-              </div> */}
             </form>
-
-            {/* {currentChromebook.published ? (
+            <div>
               <button
-                className="badge badge-primary mr-2"
-                onClick={() => this.updatePublished(false)}
-              >
-                UnPublish
+                type="submit"
+                className="md-3 btn btn-success"
+                onClick={this.updateChromebook}
+                >
+                Update
               </button>
-            ) : (
-              <button
-                className="badge badge-primary mr-2"
-                onClick={() => this.updatePublished(true)}
-              >
-                Publish
-              </button>
-            )} */}
-
-            {/* <button
-              className="badge badge-danger mr-2"
-              onClick={this.deleteTutorial}
-            >
-              Delete
-            </button> */}
-
-            <button
-              type="submit"
-              className="badge badge-success"
-              onClick={this.updateChromebook}
-            >
-              Update
-            </button>
+            </div>
             <p>{this.state.message}</p>
           </div>
         ) : (
