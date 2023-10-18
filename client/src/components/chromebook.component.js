@@ -5,12 +5,9 @@ import { withRouter } from '../common/with-router';
 class Chromebook extends Component {
   constructor(props) {
     super(props);
-    this.onChangeUser = this.onChangeTitle.bind(this);
-    //this.onChangeDescription = this.onChangeDescription.bind(this);
+    this.onChangeUser = this.onChangeUser.bind(this);
     this.getChromebook = this.getChromebook.bind(this);
-    //this.updatePublished = this.updatePublished.bind(this);
     this.updateChromebook = this.updateChromebook.bind(this);
-    //this.deleteTutorial = this.deleteTutorial.bind(this);
 
     this.state = {
       currentChromebook: {
@@ -88,7 +85,7 @@ class Chromebook extends Component {
                 <input
                   type="text"
                   className="form-control"
-                  id="description"
+                  id="chromebookUser"
                   value={currentChromebook.lastKnownUser}
                   onChange={this.onChangeUser}
                 />

@@ -21,10 +21,6 @@ class ChromebookDataService {
 //     return http.post("/tutorials", data);
 //   }
 
-//   update(id, data) {
-//     return http.put(`/tutorials/${id}`, data);
-//   }
-
 }
 
 const cds = new ChromebookDataService();

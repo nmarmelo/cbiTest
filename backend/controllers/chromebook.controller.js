@@ -36,4 +36,28 @@ exports.findOne = (req, res) => {
           message: "Error retrieving Chromebook with serial number=" + serialNumber
         });
       });
-};
+  };
+
+  exports.update = (req, res) => {
+    const serialNumber = req.params.serialNumber;
+  
+    Chromebook.update(req.body, {
+      where: { serialNumber: serialNumber }
+    })
+      .then(num => {
+        if (num == 1) {
+          res.send({
+            message: "Chromebook was updated successfully."
+          });
+        } else {
+          res.send({
+            message: `Cannot update Chromebook with serialNumber = ${serialNumber}. Maybe Chromebook was not found or req.body is empty!`
+          });
+        }
+      })
+      .catch(err => {
+        res.status(500).send({
+          message: "Error updating Chromebook with serialNumber = " + serialNumber
+        });
+      });
+    };

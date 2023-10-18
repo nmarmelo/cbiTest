@@ -13,7 +13,7 @@ module.exports = app => {
     router.get("/:serialNumber", chromebooks.findOne);
 
     // Update a Chromebook with id
-    // router.put("/:id", chromebooks.update);
+    router.put("/:serialNumber", chromebooks.update);
 
     app.use('/api/chromebooks', router);
 }
