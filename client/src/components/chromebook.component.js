@@ -1,26 +1,48 @@
 import React, { Component } from "react";
 import ChromebookDataService from "../services/chromebook.service";
+import LocationDataService from "../services/location.service";
 import { withRouter } from '../common/with-router';
+import Select from 'react-select';
 
 class Chromebook extends Component {
   constructor(props) {
     super(props);
-    this.onChangeUser = this.onChangeUser.bind(this);
     this.getChromebook = this.getChromebook.bind(this);
     this.updateChromebook = this.updateChromebook.bind(this);
+    this.retrieveLocations = this.retrieveLocations.bind(this);
+    this.onChangeUser = this.onChangeUser.bind(this);
+    this.onChangeLocation = this.onChangeLocation.bind(this);
 
     this.state = {
       currentChromebook: {
         serialNumber: "",
         lastKnownUser: "",
+        locationId: null,
         location: { id: null, name: ""}
       },
+      locations: [],
       message: ""
     };
   }
 
   componentDidMount() {
     this.getChromebook(this.props.router.params.serialNumber);
+    this.retrieveLocations();
+  }
+
+  retrieveLocations() {
+    LocationDataService.getAll()
+      .then(response => {
+        this.setState(function() {
+          return {
+              locations: response.data
+          }
+        });
+        console.log(response.data);
+      })
+      .catch(e => {
+        console.log(e);
+      });
   }
 
   onChangeUser(e) {
@@ -35,8 +57,20 @@ class Chromebook extends Component {
       };
     });
   }
+ 
+  onChangeLocation(obj) {
+    const location = { id: obj.value, name: obj.label };
 
-  //TODO: onChangeLocation(e)
+    this.setState(function(prevState) {
+      return {
+        currentChromebook: {
+          ...prevState.currentChromebook,
+          locationId: location.id,
+          location: location
+        }
+      };
+    });
+  }
 
   getChromebook(serialNumber) {
     ChromebookDataService.get(serialNumber)
@@ -70,18 +104,43 @@ class Chromebook extends Component {
   render() {
     const { currentChromebook } = this.state;
 
+    const options = this.state.locations.map((location) => {
+      return {
+        label: location.name,
+        value: location.id
+      }
+    });
+
+    const LocationsComponent = () => (
+      <Select 
+        options={options} 
+        className="basic-single"
+        classNamePrefix="select"
+        defaultValue={{ 
+          value: currentChromebook.location.id, 
+          label: currentChromebook.location.name 
+        }}
+        onChange={this.onChangeLocation}
+      />
+    )
+
     return (
       <div>
         {currentChromebook ? (
-          <div className="edit-form">
+          <div className="edit-form centered col-md-4">
             <h4>Chromebook</h4>
             <label htmlFor="serialNumber">Serial Number: {currentChromebook.serialNumber}</label>
             <form>
               <div className="form-group">
-                <label htmlFor="location">Location: {currentChromebook.location.name}</label>
+                <label htmlFor="location">Location: </label>
               </div>
+              <br></br>
+              <div>
+                <LocationsComponent></LocationsComponent>
+              </div>
+              
               <div className="form-group">
-                <label htmlFor="lastKnownUser">Last Known User</label>
+                <label htmlFor="lastKnownUser">Last Known User:</label>
                 <input
                   type="text"
                   className="form-control"
