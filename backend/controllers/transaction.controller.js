@@ -3,10 +3,10 @@ const Transaction = db.transactions;
 const Op = db.Sequelize.Op;
 
 exports.findAll = (req, res) => {
-    const id = req.query.id;
-    //var condition = id ? { serialNumber: { [Op.like]: `%${id}%` } } : null;
+    const serialNumber = req.query.serialNumber;
+    var condition = serialNumber ? { serialNumber: { [Op.like]: `%${serialNumber}%` } } : null;
 
-    Transaction.findAll({ include: { all: true }})
+    Transaction.findAll({ where: condition, include: { all: true }})
         .then(data => {
         res.send(data);
         })
