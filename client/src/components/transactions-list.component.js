@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import TransactionDataService from "../services/transaction.service";
 import { Link } from "react-router-dom";
+import '../App.css'
 
 export default class TransactionsList extends Component {
   constructor(props) {
@@ -29,7 +30,7 @@ export default class TransactionsList extends Component {
   }
 
   retrieveTransactions() {
-    TransactionDataService.getAll()
+    TransactionDataService.getAllDateDesc()
       .then(response => {
         this.setState({
           transactions: response.data
@@ -88,26 +89,38 @@ export default class TransactionsList extends Component {
           <table>
             <thead>
                 <tr>
-                    <th>ID</th>
                     <th>Date & Time</th>
                     <th>SerialNumber</th>
+                    <th>From Location</th>
+                    <th>To Location</th>
+                    <th>From User</th>
+                    <th>To User</th>
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    { transactions 
-                        && transactions.map(transaction => 
-                        <td>{transaction.id}</td>
-                    )}
-                    { transactions 
-                        && transactions.map(transaction => 
-                        <td>{transaction.dateTime}</td>
-                    )}
-                    { transactions 
-                        && transactions.map(transaction => 
-                        <td>{transaction.serialNumber}</td>
-                    )}
+            {transactions &&
+              transactions.map((transaction) => (
+                <tr key={transaction.id}>
+                  <td>
+                  {transaction.dateTime}
+                  </td>
+                  <td>
+                  {transaction.serialNumber}
+                  </td>
+                  <td>
+                  {transaction.fromLocation.name}
+                  </td>
+                  <td>
+                  {transaction.toLocation.name}
+                  </td>
+                  <td>
+                  {transaction.fromUser}
+                  </td>
+                  <td>
+                  {transaction.toUser}
+                  </td>
                 </tr>
+              ))}
             </tbody>
           </table>
         </div>

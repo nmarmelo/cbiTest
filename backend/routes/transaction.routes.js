@@ -5,5 +5,7 @@ module.exports = app => {
 
     router.get("/", transactions.findAll);
 
+    router.get("/byDate", transactions.findAllDateDesc);
+
     app.use('/api/transactions', router);
 }

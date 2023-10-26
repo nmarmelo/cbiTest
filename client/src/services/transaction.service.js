@@ -5,8 +5,12 @@ class TransactionDataService {
     return http.get("/transactions");
   }
 
+  getAllDateDesc() {
+    return http.get(`/transactions/byDate`);
+  }
+
   findBySerialNumber(serialNumber) {
-    return http.get(`/transactions?${serialNumber}`);
+    return http.get(`/transactions?serialNumber=${serialNumber}`);
   }
 
 
