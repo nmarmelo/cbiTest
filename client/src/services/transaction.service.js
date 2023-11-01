@@ -9,6 +9,15 @@ class TransactionDataService {
     return http.get(`/transactions/byDate`);
   }
 
+  getAndCountAllDateDesc(params) {
+    var query = params.serialNumber ? `&serialNumber=${params.serialNumber}` : "";
+    query += params.page ? `&page=${params.page}` : "";
+    query += params.size ? `&size=${params.size}` : "";
+    let finalQuery = query.substring(1);
+
+    return http.get(`/transactions/byDatePaginated?${finalQuery}`);
+  }
+
   findBySerialNumber(serialNumber) {
     return http.get(`/transactions?serialNumber=${serialNumber}`);
   }

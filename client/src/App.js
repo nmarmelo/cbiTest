@@ -3,7 +3,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { Link, Routes, Route } from "react-router-dom";
 import ChromebooksList from "./components/chromebooks-list.component";
 import Chromebook from "./components/chromebook.component";
-import TransactionsList from "./components/transactions-list.component";
+import TransactionsTable from "./components/transactions-table.component";
 import TutorialsList from "./components/tutorials-list.component";
 import AddTutorial from "./components/add-tutorial.component";
 import Tutorial from "./components/tutorial.component";
@@ -45,8 +45,8 @@ class App extends Component {
           <Routes>
             <Route path="/" element={<ChromebooksList/>} />
             <Route path="/chromebooks" element={<ChromebooksList/>} />
-            <Route path="/chromebooks/:serialNumber" element={<Chromebook/>} />            
-            <Route path="/transactions" element={<TransactionsList/>} />
+            <Route path="/chromebooks/:serialNumber" element={<Chromebook/>} />     
+            <Route path="/transactions" element={<TransactionsTable/>} />
             <Route path="/tutorials" element={<TutorialsList/>} />
             <Route path="/add" element={<AddTutorial/>} />
             <Route path="/tutorials/:id" element={<Tutorial/>} />

@@ -7,5 +7,7 @@ module.exports = app => {
 
     router.get("/byDate", transactions.findAllDateDesc);
 
+    router.get("/byDatePaginated", transactions.findAndCountAllDateDesc);
+
     app.use('/api/transactions', router);
 }
