@@ -73,3 +73,17 @@ exports.findAndCountAllDateDesc = (req, res) => {
     });
     });
 };
+
+exports.create = (req, res) => {
+    Transaction.create( req.body )
+    .then(data => {
+        const response = data;
+        res.send(response);
+    })
+    .catch(err => {
+    res.status(500).send({
+        message:
+        err.message || "Some error occurred while creating a transaction."
+    });
+    });
+};

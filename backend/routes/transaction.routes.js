@@ -9,5 +9,7 @@ module.exports = app => {
 
     router.get("/byDatePaginated", transactions.findAndCountAllDateDesc);
 
+    router.post("/create", transactions.create);
+
     app.use('/api/transactions', router);
 }

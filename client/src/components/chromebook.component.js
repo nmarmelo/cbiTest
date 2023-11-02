@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import ChromebookDataService from "../services/chromebook.service";
 import LocationDataService from "../services/location.service";
+import TransactionDataService from "../services/transaction.service";
 import { withRouter } from '../common/with-router';
 import Select from 'react-select';
 
@@ -15,6 +16,12 @@ class Chromebook extends Component {
 
     this.state = {
       currentChromebook: {
+        serialNumber: "",
+        lastKnownUser: "",
+        locationId: null,
+        location: { id: null, name: ""}
+      },
+      originalChromebook: {
         serialNumber: "",
         lastKnownUser: "",
         locationId: null,
@@ -76,7 +83,8 @@ class Chromebook extends Component {
     ChromebookDataService.get(serialNumber)
       .then(response => {
         this.setState({
-          currentChromebook: response.data
+          currentChromebook: response.data,
+          originalChromebook: response.data
         });
         console.log(response.data);
       })
@@ -86,12 +94,29 @@ class Chromebook extends Component {
   }
 
   updateChromebook() {
+    const transaction = {
+        toUser: this.state.currentChromebook.lastKnownUser,
+        toLocationId: this.state.currentChromebook.locationId,
+        fromUser: this.state.originalChromebook.lastKnownUser,
+        fromLocationId: this.state.originalChromebook.locationId,
+        serialNumber: this.state.currentChromebook.serialNumber
+    };
+
     ChromebookDataService.update(
       this.state.currentChromebook.serialNumber,
       this.state.currentChromebook
     )
       .then(response => {
         console.log(response.data);
+
+        TransactionDataService.create(transaction)
+          .then(response => {
+            console.log("Created transaction " + response.data.id)
+          }).
+          catch(e => {
+            console.log(e);
+          });
+
         this.setState({
           message: "The chromebook was updated successfully!"
         });
@@ -99,6 +124,8 @@ class Chromebook extends Component {
       .catch(e => {
         console.log(e);
       });
+
+      this.state.originalChromebook = this.state.currentChromebook;
   }
 
   render() {

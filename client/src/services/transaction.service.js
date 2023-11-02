@@ -23,9 +23,9 @@ class TransactionDataService {
   }
 
 
-//   create(data) {
-//     return http.post("/transactions", data);
-//   }
+  create(data) {
+    return http.post("/transactions/create", data);
+  }
 
 }
 

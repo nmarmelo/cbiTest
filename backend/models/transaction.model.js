@@ -4,7 +4,7 @@ module.exports = (sequelize, Sequelize) => {
     const Transaction = sequelize.define("transaction", {
       id: {
         type: Sequelize.NUMBER,
-        allowNull: false,
+        autoIncrement: true,
         primaryKey: true
       },
       toUser: {
