@@ -9,7 +9,6 @@ export default class ChromebooksList extends Component {
     this.retrieveChromebooks = this.retrieveChromebooks.bind(this);
     this.refreshList = this.refreshList.bind(this);
     this.setActiveChromebook = this.setActiveChromebook.bind(this);
-    //this.removeAllTutorials = this.removeAllTutorials.bind(this);
     this.searchSerialNumber = this.searchSerialNumber.bind(this);
 
     this.state = {
@@ -127,13 +126,6 @@ export default class ChromebooksList extends Component {
                 </li>
               ))}
           </ul>
-
-          <button
-            className="m-3 btn btn-sm btn-danger"
-            // onClick={this.removeAllChromebooks}
-          >
-            Remove All
-          </button>
         </div>
         <div className="col-md-6">
           {currentChromebook ? (
@@ -151,10 +143,15 @@ export default class ChromebooksList extends Component {
                 </label>{" "}
                 {currentChromebook.location.name}
               </div>
-
+              <div>
+                <label>
+                  <strong>Last Known User:</strong>
+                </label>{" "}
+                {currentChromebook.lastKnownUser}
+              </div>
               <Link
                 to={"/chromebooks/" + currentChromebook.serialNumber}
-                className="badge badge-warning"
+                className="m-3 btn btn-sm btn-success"
               >
                 Edit
               </Link>

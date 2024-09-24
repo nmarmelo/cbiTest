@@ -1,11 +1,11 @@
 import React, { Component } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Link, Routes, Route } from "react-router-dom";
+//import Html5QrcodePlugin from "./components/qr-code-scanner.component";
+import Scanner from "./components/scan-component";
 import ChromebooksList from "./components/chromebooks-list.component";
 import Chromebook from "./components/chromebook.component";
-import TutorialsList from "./components/tutorials-list.component";
-import AddTutorial from "./components/add-tutorial.component";
-import Tutorial from "./components/tutorial.component";
+import TransactionsTable from "./components/transactions-table.component";
 import Footer from "./components/Footer";
 
 class App extends Component {
@@ -18,18 +18,18 @@ class App extends Component {
           </a>
           <div className="navbar-nav mr-auto">
           <li className="nav-item">
+              <Link to={"/scan"} className="nav-link">
+                Scan
+              </Link>
+            </li>
+            <li className="nav-item">
               <Link to={"/chromebooks"} className="nav-link">
                 Chromebooks
               </Link>
             </li>
             <li className="nav-item">
-              <Link to={"/tutorials"} className="nav-link">
-                Tutorials
-              </Link>
-            </li>
-            <li className="nav-item">
-              <Link to={"/add"} className="nav-link">
-                Add
+              <Link to={"/transactions"} className="nav-link">
+                Transactions
               </Link>
             </li>
           </div>
@@ -38,11 +38,10 @@ class App extends Component {
         <div className="container mt-3">
           <Routes>
             <Route path="/" element={<ChromebooksList/>} />
+            <Route path="/scan" element={<Scanner/>} />
             <Route path="/chromebooks" element={<ChromebooksList/>} />
-            <Route path="/chromebooks/:serialNumber" element={<Chromebook/>} />
-            <Route path="/tutorials" element={<TutorialsList/>} />
-            <Route path="/add" element={<AddTutorial/>} />
-            <Route path="/tutorials/:id" element={<Tutorial/>} />
+            <Route path="/chromebooks/:serialNumber" element={<Chromebook/>} />     
+            <Route path="/transactions" element={<TransactionsTable/>} />
           </Routes>
         </div>
 

@@ -1,60 +1,49 @@
 import React, { Component } from "react";
 import ChromebookDataService from "../services/chromebook.service";
+import LocationDataService from "../services/location.service";
+import TransactionDataService from "../services/transaction.service";
 import { withRouter } from '../common/with-router';
+import Select from 'react-select';
 
 class Chromebook extends Component {
   constructor(props) {
     super(props);
-    //this.onChangeTitle = this.onChangeTitle.bind(this);
-    //this.onChangeDescription = this.onChangeDescription.bind(this);
     this.getChromebook = this.getChromebook.bind(this);
-    //this.updatePublished = this.updatePublished.bind(this);
     this.updateChromebook = this.updateChromebook.bind(this);
-    //this.deleteTutorial = this.deleteTutorial.bind(this);
+    this.retrieveLocations = this.retrieveLocations.bind(this);
+    this.onChangeUser = this.onChangeUser.bind(this);
+    this.onChangeLocation = this.onChangeLocation.bind(this);
 
     this.state = {
       currentChromebook: {
         serialNumber: "",
         lastKnownUser: "",
+        locationId: null,
         location: { id: null, name: ""}
       },
+      originalChromebook: {
+        serialNumber: "",
+        lastKnownUser: "",
+        locationId: null,
+        location: { id: null, name: ""}
+      },
+      locations: [],
       message: ""
     };
   }
 
   componentDidMount() {
-    this.getChromebook(this.props.router.params.id);
+    this.getChromebook(this.props.router.params.serialNumber);
+    this.retrieveLocations();
   }
 
-//   onChangeTitle(e) {
-//     const title = e.target.value;
-
-//     this.setState(function(prevState) {
-//       return {
-//         currentTutorial: {
-//           ...prevState.currentTutorial,
-//           title: title
-//         }
-//       };
-//     });
-//   }
-
-//   onChangeDescription(e) {
-//     const description = e.target.value;
-    
-//     this.setState(prevState => ({
-//       currentTutorial: {
-//         ...prevState.currentTutorial,
-//         description: description
-//       }
-//     }));
-//   }
-
-  getChromebook(serialNumber) {
-    ChromebookDataService.findBySerialNumber(serialNumber)
+  retrieveLocations() {
+    LocationDataService.getAll()
       .then(response => {
-        this.setState({
-          currentChromebook: response.data
+        this.setState(function() {
+          return {
+              locations: response.data
+          }
         });
         console.log(response.data);
       })
@@ -63,36 +52,71 @@ class Chromebook extends Component {
       });
   }
 
-//   updatePublished(status) {
-//     var data = {
-//       id: this.state.currentTutorial.id,
-//       title: this.state.currentTutorial.title,
-//       description: this.state.currentTutorial.description,
-//       published: status
-//     };
+  onChangeUser(e) {
+    const user = e.target.value;
 
-//     ChromebookDataService.update(this.state.currentTutorial.id, data)
-//       .then(response => {
-//         this.setState(prevState => ({
-//           currentTutorial: {
-//             ...prevState.currentTutorial,
-//             published: status
-//           }
-//         }));
-//         console.log(response.data);
-//       })
-//       .catch(e => {
-//         console.log(e);
-//       });
-//   }
+    this.setState(function(prevState) {
+      return {
+        currentChromebook: {
+          ...prevState.currentChromebook,
+          lastKnownUser: user
+        }
+      };
+    });
+  }
+ 
+  onChangeLocation(obj) {
+    const location = { id: obj.value, name: obj.label };
+
+    this.setState(function(prevState) {
+      return {
+        currentChromebook: {
+          ...prevState.currentChromebook,
+          locationId: location.id,
+          location: location
+        }
+      };
+    });
+  }
+
+  getChromebook(serialNumber) {
+    ChromebookDataService.get(serialNumber)
+      .then(response => {
+        this.setState({
+          currentChromebook: response.data,
+          originalChromebook: response.data
+        });
+        console.log(response.data);
+      })
+      .catch(e => {
+        console.log(e);
+      });
+  }
 
   updateChromebook() {
+    const transaction = {
+        toUser: this.state.currentChromebook.lastKnownUser,
+        toLocationId: this.state.currentChromebook.locationId,
+        fromUser: this.state.originalChromebook.lastKnownUser,
+        fromLocationId: this.state.originalChromebook.locationId,
+        serialNumber: this.state.currentChromebook.serialNumber
+    };
+
     ChromebookDataService.update(
       this.state.currentChromebook.serialNumber,
       this.state.currentChromebook
     )
       .then(response => {
         console.log(response.data);
+
+        TransactionDataService.create(transaction)
+          .then(response => {
+            console.log("Created transaction " + response.data.id)
+          }).
+          catch(e => {
+            console.log(e);
+          });
+
         this.setState({
           message: "The chromebook was updated successfully!"
         });
@@ -100,78 +124,68 @@ class Chromebook extends Component {
       .catch(e => {
         console.log(e);
       });
-  }
 
-//   deleteTutorial() {    
-//     ChromebookDataService.delete(this.state.currentTutorial.id)
-//       .then(response => {
-//         console.log(response.data);
-//         this.props.router.navigate('/tutorials');
-//       })
-//       .catch(e => {
-//         console.log(e);
-//       });
-//   }
+      this.state.originalChromebook = this.state.currentChromebook;
+  }
 
   render() {
     const { currentChromebook } = this.state;
 
+    const options = this.state.locations.map((location) => {
+      return {
+        label: location.name,
+        value: location.id
+      }
+    });
+
+    const LocationsComponent = () => (
+      <Select 
+        options={options} 
+        className="basic-single"
+        classNamePrefix="select"
+        defaultValue={{ 
+          value: currentChromebook.location.id, 
+          label: currentChromebook.location.name 
+        }}
+        onChange={this.onChangeLocation}
+      />
+    )
+
     return (
       <div>
         {currentChromebook ? (
-          <div className="edit-form">
+          <div className="edit-form centered col-md-4">
             <h4>Chromebook</h4>
-            <label htmlFor="serialNum">Serial Number:{currentChromebook.serialNumber}</label>
+            <label htmlFor="serialNumber">Serial Number: {currentChromebook.serialNumber}</label>
             <form>
               <div className="form-group">
-                <label htmlFor="location">Location</label>
+                <label htmlFor="location">Location: </label>
+              </div>
+              <br></br>
+              <div>
+                <LocationsComponent></LocationsComponent>
+              </div>
+              
+              <div className="form-group">
+                <label htmlFor="lastKnownUser">Last Known User:</label>
                 <input
                   type="text"
                   className="form-control"
-                  id="location"
-                  value={currentChromebook.location.name}
-                  onChange={this.onChangeLocation}
+                  id="chromebookUser"
+                  value={currentChromebook.lastKnownUser}
+                  onChange={this.onChangeUser}
                 />
               </div>
-
-              {/* <div className="form-group">
-                <label>
-                  <strong>Status:</strong>
-                </label>
-                {currentChromebook.published ? "Published" : "Pending"}
-              </div> */}
             </form>
-
-            {/* {currentChromebook.published ? (
+            <div>
               <button
-                className="badge badge-primary mr-2"
-                onClick={() => this.updatePublished(false)}
-              >
-                UnPublish
+                type="submit"
+                className="md-3 btn btn-success"
+                onClick={this.updateChromebook}
+                >
+                Update
               </button>
-            ) : (
-              <button
-                className="badge badge-primary mr-2"
-                onClick={() => this.updatePublished(true)}
-              >
-                Publish
-              </button>
-            )} */}
-
-            {/* <button
-              className="badge badge-danger mr-2"
-              onClick={this.deleteTutorial}
-            >
-              Delete
-            </button> */}
-
-            <button
-              type="submit"
-              className="badge badge-success"
-              onClick={this.updateChromebook}
-            >
-              Update
-            </button>
+            </div>
             <p>{this.state.message}</p>
           </div>
         ) : (

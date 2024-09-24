@@ -53,3 +53,29 @@
   margin: auto;
 }
 
+.centered {
+  display: 'flex';
+  text-align: center;
+  align-items: center;
+  justify-content: center;
+}
+
+table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+th {
+  white-space: nowrap;
+}
+td, th {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 8px;
+}
+
+tr:nth-child(even) {
+  background-color: #dddddd;
+}
+

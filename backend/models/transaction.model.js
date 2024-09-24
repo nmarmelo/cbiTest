@@ -1,11 +1,10 @@
-const chromebookModel = require("./chromebook.model");
-const locationModel = require("./location.model");
-
+// const chromebookModel = require("./chromebook.model");
+// const locationModel = require("./location.model");
 module.exports = (sequelize, Sequelize) => {
     const Transaction = sequelize.define("transaction", {
       id: {
         type: Sequelize.NUMBER,
-        allowNull: false,
+        autoIncrement: true,
         primaryKey: true
       },
       toUser: {
@@ -22,8 +21,7 @@ module.exports = (sequelize, Sequelize) => {
       }
     }, {
         timestamps: false
-    });
-    
+    });  
     
     return Transaction;
   };

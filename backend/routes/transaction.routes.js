@@ -5,5 +5,11 @@ module.exports = app => {
 
     router.get("/", transactions.findAll);
 
+    router.get("/byDate", transactions.findAllDateDesc);
+
+    router.get("/byDatePaginated", transactions.findAndCountAllDateDesc);
+
+    router.post("/create", transactions.create);
+
     app.use('/api/transactions', router);
 }
