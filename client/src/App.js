@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Link, Routes, Route } from "react-router-dom";
+//import Html5QrcodePlugin from "./components/qr-code-scanner.component";
+import Scanner from "./components/scan-component";
 import ChromebooksList from "./components/chromebooks-list.component";
 import Chromebook from "./components/chromebook.component";
 import TransactionsTable from "./components/transactions-table.component";
@@ -18,6 +20,11 @@ class App extends Component {
             nMarmelo
           </a>
           <div className="navbar-nav mr-auto">
+          <li className="nav-item">
+              <Link to={"/scan"} className="nav-link">
+                Scan
+              </Link>
+            </li>
             <li className="nav-item">
               <Link to={"/chromebooks"} className="nav-link">
                 Chromebooks
@@ -28,7 +35,7 @@ class App extends Component {
                 Transactions
               </Link>
             </li>
-            <li className="nav-item">
+            {/* <li className="nav-item">
               <Link to={"/tutorials"} className="nav-link">
                 Tutorials
               </Link>
@@ -37,19 +44,20 @@ class App extends Component {
               <Link to={"/add"} className="nav-link">
                 Add
               </Link>
-            </li>
+            </li> */}
           </div>
         </nav>
 
         <div className="container mt-3">
           <Routes>
             <Route path="/" element={<ChromebooksList/>} />
+            <Route path="/scan" element={<Scanner/>} />
             <Route path="/chromebooks" element={<ChromebooksList/>} />
             <Route path="/chromebooks/:serialNumber" element={<Chromebook/>} />     
             <Route path="/transactions" element={<TransactionsTable/>} />
-            <Route path="/tutorials" element={<TutorialsList/>} />
+            {/* <Route path="/tutorials" element={<TutorialsList/>} />
             <Route path="/add" element={<AddTutorial/>} />
-            <Route path="/tutorials/:id" element={<Tutorial/>} />
+            <Route path="/tutorials/:id" element={<Tutorial/>} /> */}
           </Routes>
         </div>
 
