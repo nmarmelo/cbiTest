@@ -6,9 +6,6 @@ import Scanner from "./components/scan-component";
 import ChromebooksList from "./components/chromebooks-list.component";
 import Chromebook from "./components/chromebook.component";
 import TransactionsTable from "./components/transactions-table.component";
-import TutorialsList from "./components/tutorials-list.component";
-import AddTutorial from "./components/add-tutorial.component";
-import Tutorial from "./components/tutorial.component";
 import Footer from "./components/Footer";
 
 class App extends Component {
@@ -35,16 +32,6 @@ class App extends Component {
                 Transactions
               </Link>
             </li>
-            {/* <li className="nav-item">
-              <Link to={"/tutorials"} className="nav-link">
-                Tutorials
-              </Link>
-            </li>
-            <li className="nav-item">
-              <Link to={"/add"} className="nav-link">
-                Add
-              </Link>
-            </li> */}
           </div>
         </nav>
 
@@ -55,9 +42,6 @@ class App extends Component {
             <Route path="/chromebooks" element={<ChromebooksList/>} />
             <Route path="/chromebooks/:serialNumber" element={<Chromebook/>} />     
             <Route path="/transactions" element={<TransactionsTable/>} />
-            {/* <Route path="/tutorials" element={<TutorialsList/>} />
-            <Route path="/add" element={<AddTutorial/>} />
-            <Route path="/tutorials/:id" element={<Tutorial/>} /> */}
           </Routes>
         </div>
 
